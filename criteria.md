@@ -25,6 +25,7 @@ contains the answer.
 **Why this target:**
 <!-- e.g. "One of my questions is about a topic only two documents mention, so
      I expect that one to be hard." -->
+One of my questions have contradicting information of what the answer could be depending on the document, so I suspect that may be harder to answer.
 
 ---
 
@@ -35,6 +36,7 @@ Every answer the system produces names at least one source document.
 **Why this target:**
 <!-- Why all five and not four? What about your setup makes that achievable —
      or what would have to go wrong for it not to be? -->
+The system is designed to operate strictly on a closed corpus, every response must be verifiable.
 
 ---
 
@@ -52,6 +54,7 @@ in at least 4 of 5 tries.
 **Why this target:**
 <!-- What did your distances look like when you set the cutoff in Milestone 4?
      Was there a clean gap, or did the two groups overlap? -->
+Allowing 4 of 5 tries account for margin of error that could bypass the relevance gate, such as if an out-of-domain question shares high semantic similarity or keyword overlap with our source documents.
 
 ---
 
@@ -68,12 +71,11 @@ in at least 4 of 5 tries.
           sentence cut in half at either end."
        - "No chunk is shorter than 200 characters, since anything below that
           in my corpus turned out to be a heading with no content under it." -->
-
+At least 4 of 5 sampled chunks contains enough complete context to answer the question without having to rely on non-retrieved text. 
 
 
 **Why this target:**
-
-
+I am accounting for sections in the source documents that rely on the section header to provide context to the section, which may cause chunks with incomplete context.
 
 ---
 
@@ -86,11 +88,11 @@ in at least 4 of 5 tries.
      handles badly, about source attribution being correct rather than merely
      present — anything, as long as it names a number or an observable
      outcome. -->
-
+The final answer must rely on information that appears in 2 or more sources.
 
 
 **Why this target:**
-
+Because there's no way to know what document is the most up to date, cross-referencing information across documents ensures that outdated information is filtered out.
 
 
 ---
