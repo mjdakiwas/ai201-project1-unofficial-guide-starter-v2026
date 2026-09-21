@@ -22,6 +22,7 @@ to it, write down what you saw, and move on. That's a real observation about
 your pipeline, not giving up.
 """
 
+import re
 from dataclasses import dataclass
 
 import config
@@ -80,24 +81,144 @@ def fallback_split(
     return chunks
 
 
+_HEADING = re.compile(r"^##\s+(.*)$", re.M)
+_TITLE = re.compile(r"^#\s+(.*)$", re.M)
+_SENTENCE_END = re.compile(r"(?<=[.!?])\s+")
+
+
+def _document_title(text: str) -> str:
+    """The `# Heading` a guide opens with, e.g. "Brightwater"."""
+    match = _TITLE.match(text.lstrip())
+    return match.group(1).strip() if match else ""
+
+
+def _sections(text: str) -> list[tuple[str, str]]:
+    """
+    Break one guide into (heading, body) pairs at its `##` headings.
+
+    Anything before the first heading — the title line and the paragraph of
+    scene-setting most guides open with — comes back as "Overview" rather than
+    being dropped. That paragraph carries population and history, which some
+    questions ask about.
+    """
+    headings = list(_HEADING.finditer(text))
+    sections: list[tuple[str, str]] = []
+
+    preamble = text[: headings[0].start()] if headings else text
+    preamble = _TITLE.sub("", preamble, count=1).strip()
+    if preamble:
+        sections.append(("Overview", preamble))
+
+    for i, heading in enumerate(headings):
+        end = headings[i + 1].start() if i + 1 < len(headings) else len(text)
+        body = text[heading.end() : end].strip()
+        if body:
+            sections.append((heading.group(1).strip(), body))
+
+    return sections
+
+
+def _overlap_tail(window: str, overlap: int) -> str:
+    """
+    The last `overlap` characters of a window, trimmed forward to a whole word.
+
+    This is what gets repeated at the start of the next window, so a sentence
+    the section split landed on top of still reads as continuous somewhere.
+    """
+    if overlap <= 0 or len(window) <= overlap:
+        return ""
+    tail = window[-overlap:]
+    space = tail.find(" ")
+    return tail[space + 1 :].strip() if space != -1 else tail.strip()
+
+
+def _windows(body: str, chunk_size: int, overlap: int) -> list[str]:
+    """
+    Cut one over-long section down to windows of at most `chunk_size`.
+
+    Most sections in this corpus are already under the limit and come straight
+    back out whole. The rest get packed sentence by sentence, so a window ends
+    on a full stop instead of mid-clause.
+    """
+    if len(body) <= chunk_size:
+        return [body]
+
+    sentences = [s.strip() for s in _SENTENCE_END.split(body) if s.strip()]
+    windows: list[str] = []
+    current = ""
+
+    for sentence in sentences:
+        # One sentence longer than the whole window can't be packed. Rare, but
+        # without this the loop would never place it.
+        if len(sentence) > chunk_size:
+            if current:
+                windows.append(current)
+                current = ""
+            step = chunk_size - overlap
+            for start in range(0, len(sentence), step):
+                windows.append(sentence[start : start + chunk_size])
+            continue
+
+        candidate = f"{current} {sentence}".strip()
+        if current and len(candidate) > chunk_size:
+            windows.append(current)
+            current = f"{_overlap_tail(current, overlap)} {sentence}".strip()
+        else:
+            current = candidate
+
+    if current:
+        windows.append(current)
+
+    return windows
+
+
 def split_documents(documents: list[Document]) -> list[Chunk]:
     """
-    Split documents into chunks. ⚠️ REPLACE THE BODY OF THIS IN MILESTONE 3.
+    Split each guide at its `##` headings, one chunk per section.
 
-    Right now it just calls the fallback. That is the plain, generic behaviour
-    the brief is talking about.
+    The corpus is 14 city guides, every one of them a `# Title` followed by
+    `##` sections that each answer a different question — getting there,
+    eating, when to go. Sections run 173 to 708 characters, median 294, so the
+    starter's 800-character window was routinely gluing two unrelated topics
+    into one chunk and cutting a third in half. Splitting on the headings the
+    documents already have keeps one topic per chunk.
 
-    When you write your own strategy, set `produced_by` to
-    "chunker.py::split_documents" so your README's Sample Chunks section names
-    the right function. `app.py chunks` prints that string for you.
+    CHUNK_SIZE (350) is the ceiling on a section's own text, picked at the low
+    end of the section average. About a quarter of sections run past it and get
+    packed into sentence-bounded windows with CHUNK_OVERLAP (50) characters
+    carried across each boundary.
 
-    Things worth thinking about before you write any code:
-      - Are your documents short posts or long guides?
-      - Is the useful information in one sentence, or spread over a paragraph?
-      - Would splitting on paragraph breaks keep more thoughts intact than
-        splitting on a character count?
+    Every chunk is prefixed with "Title — Heading". Six guides describe the
+    same handful of topics, so a bare paragraph about bus routes is ambiguous
+    about which town it belongs to; the prefix is not counted against
+    CHUNK_SIZE because it is context, not content.
     """
-    return fallback_split(documents)
+    chunk_size = config.CHUNK_SIZE
+    overlap = config.CHUNK_OVERLAP
+
+    if overlap >= chunk_size:
+        raise ValueError("overlap has to be smaller than chunk_size")
+
+    chunks: list[Chunk] = []
+    for doc in documents:
+        title = _document_title(doc.text)
+        index = 0
+
+        for heading, body in _sections(doc.text):
+            prefix = f"{title} — {heading}" if title else heading
+
+            for window in _windows(body, chunk_size, overlap):
+                chunks.append(
+                    Chunk(
+                        text=f"{prefix}\n\n{window}",
+                        source=doc.source,
+                        index=index,
+                        produced_by="chunker.py::split_documents",
+                    )
+                )
+                index += 1
+
+    return chunks
 
 
 def describe(chunks: list[Chunk]) -> str:
