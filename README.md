@@ -1,19 +1,6 @@
 # The Unofficial Guide
 
-<!-- Replace this line with your name and which corpus you picked. -->
-
-> **This file is your submission.** Fill it in as you go — most sections get
-> written during the milestone that produces them, not at the end.
->
-> How the starter works, and every command you'll need, is in `RUNNING.md`.
-> Leave that file alone.
->
-> **Paste everything as text.** No screenshots, no video. A typed table gets
-> full credit; a picture of the same table gets none.
->
-> Delete these instruction blocks as you replace them. The `<!-- -->` comments
-> are notes to you and don't show up when the page renders — you can leave them
-> or remove them.
+Marlette Jessa Dakiwas - city_guide Corpus
 
 ---
 
@@ -21,11 +8,6 @@
 
 ## What This Does
 
-<!-- Three or four sentences. Which corpus you picked, and the kinds of
-     questions your system answers. Write it for someone who has never seen
-     this repo.
-
-     Milestone 5. -->
      The corpus I picked is city_guides. The corpus provides guidal information about multiple cities in a region: Brightwater, Corry Vale, Elder Ness, Givens Mill, Halden Bay, Kestrelford, Marchwood, Pellew Sands, and Thornby Wells. My system answers questions like geographic proximity, localized activities, and cultural recommendations.
 
 ## Chunking Strategy
@@ -33,27 +15,9 @@
 **Chunk size:** 350
 **Overlap:** 50
 
-<!-- What about YOUR documents made you pick these numbers? Short posts and
-     long sectioned guides don't want the same chunking, and "800 seemed
-     reasonable" earns nothing. Point at something you noticed when you read
-     the documents in Milestone 1.
-
-     If you changed your mind partway through, say so and say why. That's worth
-     more than pretending you got it right first time.
-
-     Milestone 3. -->
 The structural format of the documents is a section for a specific context. Each section's length, including their headers, average around 350-400 characters. My strategy is to chuck by each section with the lower end of each section's average characters and account for the remaining characters that may get cut off as overlap with the neighboring chunk to ensure to retain as much relevant context as possible.
 
 ## Sample Chunks
-
-<!-- Five chunks, pasted as text. Label each one and name the file it came from
-     AND the function that produced it — the grader checks your code against
-     what you claim here.
-
-     `python app.py chunks -n 5` prints all three for you. Copy them straight
-     across.
-
-     Milestone 3. -->
 
 **Chunk 1** — source: `guide_accessibility.md#0` — produced by: `chunker.py::split_documents`
 
@@ -100,9 +64,6 @@ steep walk up.
 
 ## Sample Answer
 
-<!-- One complete question and answer, pasted as text, with the source line
-     visible. Milestone 4. -->
-
 **Question:** Where is the nearest full hospital?
 
 **Answer:** The nearest full hospital is in Brightwater. This information comes from all of the provided documents (`guide_halden_bay.md`, `guide_corry_vale.md`, `guide_kestrelford.md`, `guide_pellew_sands.md`, and `guide_marchwood.md`).
@@ -112,15 +73,6 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 ```
 
 **My relevance cutoff:** 0.635
-
-<!-- The number you set in config.py, and how you got there.
-
-     You ran five questions your corpus covers and the five in OUT_OF_SCOPE
-     that it clearly doesn't, and wrote down the best distance for each. What
-     did those two groups look like? Where was the gap? Put the actual numbers
-     here — the table below wants all ten rows.
-
-     Milestone 4. -->
 
 | Question | In corpus? | Best distance |
 |---|---|---|
@@ -137,23 +89,9 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 ## How I Used AI
 
-<!-- Two specific moments. For each: what you asked for, what came back, and
-     what you changed about it.
+**1.** I asked Gemini to review my acceptance criteria. I asked it whether they were testable without context. It provided me suggestions on what directions I can frame myself when thinking about writing acceptance criteria.
 
-     "I asked Claude to write the chunking function from my notes. It ignored
-     the overlap, so I added that myself" is the level of detail we're after.
-     "I used AI to help me code" is not.
-
-     Milestone 5. -->
-
-**1.**
-
-**2.**
-
-<!-- ── Stretch features ─────────────────────────────────────────────────────
-     Doing one? Say so here BEFORE you start. A feature this README never
-     claims earns nothing.
-     ───────────────────────────────────────────────────────────────────────── -->
+**2.** I asked Claude (specifically Claude Code extension in VSCode) to write the chunking function based on my chunking strategy I wrote in README.md. My specific prompt was "Help me write the split_documents function based on my chunking strategy in README.md." It was thorough in verifying the function it wrote, and I didn't need to add anything else myself.
 
 ---
 
