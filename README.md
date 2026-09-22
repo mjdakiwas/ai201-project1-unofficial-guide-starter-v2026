@@ -103,14 +103,15 @@ steep walk up.
 <!-- One complete question and answer, pasted as text, with the source line
      visible. Milestone 4. -->
 
-**Question:**
+**Question:** Where is the nearest full hospital?
 
-**Answer:**
+**Answer:** The nearest full hospital is in Brightwater. This information comes from all of the provided documents (`guide_halden_bay.md`, `guide_corry_vale.md`, `guide_kestrelford.md`, `guide_pellew_sands.md`, and `guide_marchwood.md`).
 
 ```
+Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.md, guide_marchwood.md, guide_pellew_sands.md
 ```
 
-**My relevance cutoff:**
+**My relevance cutoff:** 0.635
 
 <!-- The number you set in config.py, and how you got there.
 
@@ -123,7 +124,16 @@ steep walk up.
 
 | Question | In corpus? | Best distance |
 |---|---|---|
-|  |  |  |
+| Where in the region is suitable for an easy walk? | Yes | 0.4552 |
+| Where is the nearest full hospital? | Yes | 0.2792 |
+| When is the best time in the year to visit Brightwater to avoid huge crowds? | Yes | 0.3749 |
+| What areas in the region can I easily travel in? | Yes | 0.5445 |
+| When should I visit Kestrelford Saturday market? | Yes | 0.3317 |
+| What is the capital of Mongolia? | No | 0.8874 |
+| How do I change the oil in a diesel engine? | No | 0.8969 |
+| Who won the 1994 World Cup? | No | 0.9026 |
+| What is the recommended dosage of ibuprofen for a headache? | No | 0.8293 |
+| How do I write a for loop in Rust? | No | 0.8529 |
 
 ## How I Used AI
 
