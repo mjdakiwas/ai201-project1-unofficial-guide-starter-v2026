@@ -115,15 +115,151 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Chunks contains enough complete context to answer the question without having to rely on non-retrieved text | 4 of 5 | 3/5 | 3/5 | 3/5 | MISSED |
+| 5. Answer rely on two or more source materials | 5 of 5 | 2/5 | 2/5 | 3/5 | MISSED |
 
 <!-- Underneath, paste the REAL output for each criterion from one of your
      runs — the actual text your system produced, not a description of it.
      Name the file and function that produced it. -->
+### Criterion 1
+* **File & Function:** `run_eval.py` -> `run_once()`
+     * I ran `python run_eval.py --label before` to produced `results\run_2026-09-25_1918_before.md`, which evaluated whether the question failed or pass and the output for each questions for three different runs. I used the table that displays whether the question passed or failed to determine whether the question was answered or not by my system.
+* **Questions:** Run 1
+     * "Where in the region is suitable for an easy walk?"
+          * **Retrieved Output:** 
+               ```
+               Based on the provided documents, easy walks in the region include the Brightwater river path, which runs four miles upstream on a made, flat surface, and the Kestrelford trackbed, which offers an easy gradient and good surface along an old railway line. Additionally, Thornby Wells has flat, formal gardens and level streets suitable for walking. 
+
+               Source: `guide_walking.md`
+               ```
+     * "Where is the nearest full hospital?"
+          * **Retrieved Output:** 
+               ```
+               The nearest full hospital is in Brightwater, as stated in `guide_halden_bay.md`, `guide_corry_vale.md`, `guide_kestrelford.md`, `guide_pellew_sands.md`, and `guide_marchwood.md`.
+               ```
+     * "When is the best time in the year to visit Brightwater to avoid huge crowds?"
+          * **Retrieved Output:** 
+               ```
+               Late May is arguably the best week of the year in Brightwater because the days are long, everything is running, and the students are gone (*guide_seasons.md*). Additionally, June and July/August (before September when the term starts) are also mentioned as times when Brightwater goes quiet to the point of dullness with the university empty (*guide_seasons.md*).
+               ```
+     * "What areas in the region can I easily travel in?"
+          * **Retrieved Output:** 
+               ```
+               Based on the documents, the easiest towns in the region for getting around with limited mobility are Thornby Wells (which is flat, compact, and level throughout the pump room and gardens) and Marchwood (which has a modern tram network with level boarding, and step-free city museum and covered market). Brightwater is also level along the river and through the centre, with a step-free mill museum. 
+
+               Source: `guide_accessibility.md`
+               ```
+     * "When should I visit Kestrelford Saturday market?"
+          * **Retrieved Output:**
+               ```
+               According to `guide_seasons.md`, the Kestrelford Saturday market builds back to full size through April, and `guide_eating.md` notes that the market is the region's best (though much reduced from November to February).
+               ```
+
+### Criterion 2
+* **File & Function:** `run_eval.py` -> `run_once()`
+     * I ran `python run_eval.py --label before` to produced `results\run_2026-09-25_1918_before.md`, which evaluated whether the question failed or pass and the output for each questions for three different runs. I evaluated the output for each questions' Run 2 whether it cites at least one source document.
+* **Questions:** Run 2
+     * "Where in the region is suitable for an easy walk?"
+          * **Retrieved Output:** 
+               ```
+               Based on the provided documents, suitable locations for an easy walk include:
+               - The **Brightwater river path**, which runs four miles upstream on a flat, made surface.
+               - The **Kestrelford trackbed**, which follows a closed railway line for six miles on an easy gradient.
+               - **Thornby Wells**, which features flat, formal gardens and level streets.
+
+               Source: `guide_walking.md`
+               ```
+     * "Where is the nearest full hospital?"
+          * **Retrieved Output:** 
+               ```
+               The nearest full hospital is in Brightwater, according to all the provided documents (`guide_halden_bay.md`, `guide_corry_vale.md`, `guide_kestrelford.md`, `guide_pellew_sands.md`, and `guide_marchwood.md`).
+               ```
+     * "When is the best time in the year to visit Brightwater to avoid huge crowds?"
+          * **Retrieved Output:** 
+               ```
+               Late May is arguably the best week of the year in Brightwater, featuring long days, everything running, and the students gone (`guide_seasons.md`). Additionally, September is described as a sweet spot where everything is still open and it is quiet, before it gets busy in late September when term starts (`guide_seasons.md`).
+               ```
+     * "What areas in the region can I easily travel in?"
+          * **Retrieved Output:** 
+               ```
+               Based on `guide_accessibility.md`, the easiest town in the region for limited mobility is Thornby Wells, as it is flat, compact, level throughout the pump room and gardens, and everything is within three minutes of everything else. Additionally, Marchwood has a modern tram network with level boarding on all four lines, and its city museum and covered market are step-free. Brightwater is also level along the river and through the centre, with a step-free mill museum.
+               ```
+     * "When should I visit Kestrelford Saturday market?"
+          * **Retrieved Output:**
+               ```
+               According to `guide_seasons.md`, the Kestrelford Saturday market builds back to full size through April, and `guide_eating.md` notes that the market is the region's best (though much reduced from November to February).
+               ```
+
+### Criterion 3
+* **File & Function:** `run_eval.py` -> `check_out_of_scope()`
+     * I ran `python run_eval.py --label before` to produced `results\run_2026-09-25_1918_before.md`, which checks whether the question is in or out of scope. I used the table it produced to determine whether an out of scope question was refused. I ran `python app.py ask "[question]"` to get the system's explicit output for each out of scope question.
+* **Questions:** Run 1
+     * "What is the capital of Mongolia?"
+          * **Retrieved Output:** `I don't have enough information about that.`
+     * "How do I change the oil in a diesel engine?"
+          * **Retrieved Output:** `I don't have enough information about that.`
+     * "Who won the 1994 World Cup?"
+          * **Retrieved Output:** `I don't have enough information about that.`
+     * "What is the recommended dosage of ibuprofen for a headache?"
+          * **Retrieved Output:** `I don't have enough information about that.`
+     * "How do I write a for loop in Rust?"
+          * **Retrieved Output:** `I don't have enough information about that.`
+
+### Criterion 4
+* **File & Function:** `app.py` -> `ask_pipeline()`
+     * I explicitly ran `app.ask_pipeline("[question]")` to retrieve the sample chunks for each questions and evaluate whether the first chunk has enough complete context to answer the question without unretrieved context.
+* **Questions:** Run 1
+     * "Where in the region is suitable for an easy walk?"
+          * **Retrieved Chunk:** [from guide_regional_transport.md]\ncar park is free and involves a\nsteep walk up.\n\n## Walking and cycling\n\nThe river path from Brightwater runs four miles upstream on a good surface. The\nold railway trackbed from Kestrelford runs six miles on an easy gradient and is\nthe best walking in the region for the effort involved. The coastal path from\nHalden Bay is more serious — exposed, and closed in high wind.\n\nCycling is pleasant on the river path and the trackbed, and unpleasant on Mill\nRoad and the coast road, neither of which has a shoulder.
+     * "Where is the nearest full hospital?"
+          * **Retrieved Chunk:** [from guide_halden_bay.md]\nn the centre and\npatchy on the outskirts. The nearest full hospital is in Brightwater; there is\na minor injuries unit locally with limited hours.
+     * "When is the best time in the year to visit Brightwater to avoid huge crowds?"
+          * **Retrieved Chunk:** [from guide_seasons.md]\n# When to visit the region\n\n## Spring, March to May\n\nDays lengthen quickly and businesses that closed for winter reopen through\nMarch and April. By May everything is open and the weather is reliable enough\nto plan around. Late May is arguably the best week of the year in Brightwater —\nlong days, everything running, and the students gone.\n\nThe Kestrelford Saturday market builds back to full size through April.\n\n## Summer, June to August\n\nJune is excellent everywhere. July and August split: Halden Bay becomes very\nbusy and the parking problem dominates, Kestrelford fills with walkers, and\nBrightwater goes quiet to the point of dullness with the university empty.\n\nIf you are going to Halden Bay in August, arrive before 10am or plan to use the\noverflow lot.\n\n## Autumn, September to November\n\nS
+     * "What areas in the region can I easily travel in?"
+          * **Retrieved Chunk:** [from guide_accessibility.md]\n# Getting around the region with limited mobility\n\nAn honest assessment rather than a promotional one. Some of these places are\ndifficult and it is better to know in advance.\n\n## Straightforward\n\n**Thornby Wells** is the easiest town in the region. It is flat, compact, and\neverything is within three minutes of everything else. Parking is free for two\nhours anywhere in town and the station is central. The pump room and gardens\nare level throughout.\n\n**Marchwood** has a modern tram network with level boarding on all four lines,\nrunning every 8 minutes on weekdays. The city museum and covered market are both\nstep-free. The distances between districts are the main consideration.\n\n**Brightwater** is level along the river and through the centre. The mill museum\nis step-free. The station is a 15-
+     * "When should I visit Kestrelford Saturday market?"
+          * **Retrieved Chunk:** [from guide_eating.md]\nurs\n\nThis catches visitors out more than anything else. Outside Marchwood, kitchens\nacross the region stop serving at 9pm and often earlier. Kestrelford's pubs\nserve 12 to 2 and 6 to 8:30 and there is nowhere to eat at all outside those\nwindows. Elder Ness has one pub, closed Mondays.\n\nSunday evening is the hardest meal to find anywhere except Marchwood and\nThornby Wells.\n\n## Markets\n\nKestrelford's Saturday market has run since the 1400s and is the region's best,\nthough much reduced from November to February. Brightwater's Tuesday market\nsets up at 7am in the square and is finished by 1pm. Marchwood's covered market\nhas operated since 1863, runs six days a week, and is at its best on a weekday\nmorning.\n\n## Local specifics\n\nHalden Bay's seafood is genuinely fresh — the two harbour restauran
+
+### Criterion 5
+* **File & Function:** `run_eval.py` -> `run_once()`
+     * I ran `python run_eval.py --label before` to produced `results\run_2026-09-25_1918_before.md`, which has the output for each questions. I used the output to evaluate whether the answer referenced two or more material sources.
+* **Questions:** Run 3
+     * "Where in the region is suitable for an easy walk?"
+          * **Retrieved Output:** 
+               ```
+               Based on the documents, the following places are suitable for an easy walk:
+
+               * The **Brightwater river path** runs four miles upstream to a weir on a made, flat surface (also mentioned as a good surface in `guide_regional_transport.md`). 
+               * The **Kestrelford trackbed** runs six miles along a closed railway line with an easy gradient and a good surface. 
+               * **Thornby Wells** has flat, formal gardens and level streets.
+
+               *(Sources: `guide_walking.md` and `guide_regional_transport.md`)*
+               ```
+     * "Where is the nearest full hospital?"
+          * **Retrieved Output:** 
+               ```
+               The nearest full hospital is in Brightwater. This comes from `guide_halden_bay.md`, `guide_corry_vale.md`, `guide_kestrelford.md`, `guide_pellew_sands.md`, and `guide_marchwood.md`.
+               ```
+     * "When is the best time in the year to visit Brightwater to avoid huge crowds?"
+          * **Retrieved Output:** 
+               ```
+               Late May is arguably the best week of the year in Brightwater, as it features long days, everything running, and the students gone (guide_seasons.md). Additionally, July and August are times when Brightwater goes quiet to the point of dullness with the university empty (guide_seasons.md).
+               ```
+     * "What areas in the region can I easily travel in?"
+          * **Retrieved Output:** 
+               ```
+               Based on `guide_accessibility.md`, the easiest town in the region is **Thornby Wells**, which is flat, compact, and level throughout the pump room and gardens. 
+
+               Additionally, **Marchwood** has a modern tram network with level boarding on all four lines, and its city museum and covered market are both step-free. **Brightwater** is also level along the river and through the centre, with a step-free mill museum.
+               ```
+     * "When should I visit Kestrelford Saturday market?"
+          * **Retrieved Output:**
+               ```
+               According to `guide_seasons.md`, the Kestrelford Saturday market builds back to full size through April, and `guide_eating.md` notes that the market is the region's best (though much reduced from November to February).
+               ```
 
 ## Verdicts
 
