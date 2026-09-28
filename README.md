@@ -299,6 +299,9 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
      low, and which one you'd tighten and to what.
 
      Milestone 3. -->
+* **Criterion 1:** In `results\run_2026-09-25_1918_before.md`, questions 1, 3, 4, and 5 failed for all three runs. Only question 2 passed and for three runs. I reviewed the retrieved chunks for the failed questions and determined that the answers do exist in the retrieved chunks. My expects were configured incorrectly where I used phrases that were too narrow/specific, using redundant words that wouldn't be in the source materials. So, even though Chunking and Retrieval were correct, the system returned a failure because `scorer.py` expected an exact string match.
+* **Criterion 4:** I reviewed whether the top retrieved chunks has the answer I put in expects. Only question 2 has the explicit answer/keyword in the top retrieved chunk. Like with my diagnosis for Criterion 1, I had made the expects too narrow so the phrases weren't in the top retrieved chunk. Again, even though Chunking and Retrieval were correct, the criterion failed because of faulty evaluation benchmarks.
+* **Criterion 5:** The retrieved chunks were sourced from two or more source materials for all five questions. However, for some outputs, the system failed to explicitly cite multiple sources in its final written answer. The system prompt did not explicitly instruct synthesizing information across multiple documents so the failure happened during Generation stage.
 
 ## The Improvement
 
@@ -316,11 +319,11 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
-| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
-| 4. Top chunk contains answer | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
-| 5. Answer rely on two or more source materials | 5 of 5 | 4/5 | 4/5 | 4/5 | MET |
+| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
+| 2. Every answer names a source | 5 of 5 |  |  |  |  |
+| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
+| 4. | | | | | |
+| 5. | | | | | |
 
 **Did it help?**
 
