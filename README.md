@@ -93,25 +93,13 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 **2.** I asked Claude (specifically Claude Code extension in VSCode) to write the chunking function based on my chunking strategy I wrote in README.md. My specific prompt was "Help me write the split_documents function based on my chunking strategy in README.md." It was thorough in verifying the function it wrote, and I didn't need to add anything else myself.
 
+**3.** I used Claude to read my diagnosis for Criterion 5 and based on that, apply the fix on the specific RAG pipeline.
+
 ---
 
 # Unit 2
 
-<!-- These sections get ADDED to what's already above. Don't delete or rewrite
-     unit 1 — the point is that someone can see what you said before you knew
-     how it went. -->
-
 ## Run Log — Before
-
-<!-- Your five criteria, three runs each. `python run_eval.py --label before`
-     runs the questions, puts the OUT_OF_SCOPE ones through the gate, and
-     writes it all into results/ for you. Targets come from criteria.md; the
-     verdict column is your call.
-
-     Criterion 3 is measured in one deterministic pass rather than three, so
-     the same number goes in all three run columns. That's correct, not lazy.
-
-     Milestone 1. -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
@@ -121,9 +109,6 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 | 4. Chunks contains enough complete context to answer the question without having to rely on non-retrieved text | 4 of 5 | 3/5 | 3/5 | 3/5 | MISSED |
 | 5. Answer rely on two or more source materials | 5 of 5 | 2/5 | 2/5 | 3/5 | MISSED |
 
-<!-- Underneath, paste the REAL output for each criterion from one of your
-     runs — the actual text your system produced, not a description of it.
-     Name the file and function that produced it. -->
 ### Criterion 1
 * **File & Function:** `run_eval.py` -> `run_once()`
      * I ran `python run_eval.py --label before` to produced `results\run_2026-09-25_1918_before.md`, which evaluated whether the question failed or pass and the output for each questions for three different runs. I used the table that displays whether the question passed or failed to determine whether the question was answered or not by my system.
@@ -263,15 +248,6 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 ## Verdicts
 
-<!-- MET or MISSED for each of the five, against the target you wrote last
-     unit — not a new one. Plus a sentence on how you decided. That sentence
-     matters most where it was close.
-
-     If your target said 4 of 5 and your runs came out 4, 3, 4, that's a MISS.
-     The target has to hold, not show up occasionally.
-
-     Milestone 2. -->
-
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
 | 1 | Retrieved chunk contains the answer | MISSED | Based on the pass/fail table in `results\run_2026-09-25_1918_before.md`, only 1 question out of 5 passed for all three runs so I marked this criterion as MISSED.  |
@@ -282,23 +258,6 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 ## Diagnoses
 
-<!-- For each miss: which stage caused it, and how. The stage alone isn't
-     enough — you need the mechanism.
-
-     Not a diagnosis: "Question 3 didn't work."
-     A diagnosis:     "Question 3 asks about laundry costs. The answer is in
-                       one sentence that got split across two chunks, so
-                       neither chunk on its own contains it."
-
-     The five stages: loading → chunking → embedding → retrieval → generation.
-
-     Look for a pattern. If three misses all ask about numbers, that's one
-     problem, not three.
-
-     Missed nothing? Say so, then say honestly whether your targets were set
-     low, and which one you'd tighten and to what.
-
-     Milestone 3. -->
 * **Criterion 1:** In `results\run_2026-09-25_1918_before.md`, questions 1, 3, 4, and 5 failed for all three runs. Only question 2 passed and for three runs. I reviewed the retrieved chunks for the failed questions and determined that the answers do exist in the retrieved chunks. My expects were configured incorrectly where I used phrases that were too narrow/specific, using redundant words that wouldn't be in the source materials. So, even though Chunking and Retrieval were correct, the system returned a failure because `scorer.py` expected an exact string match.
 * **Criterion 4:** I reviewed whether the top retrieved chunks has the answer I put in expects. Only question 2 has the explicit answer/keyword in the top retrieved chunk. Like with my diagnosis for Criterion 1, I had made the expects too narrow so the phrases weren't in the top retrieved chunk. Again, even though Chunking and Retrieval were correct, the criterion failed because of faulty evaluation benchmarks.
 * **Criterion 5:** The retrieved chunks were sourced from two or more source materials for all five questions. However, for some outputs, the system failed to explicitly cite multiple sources in its final written answer. The system prompt did not explicitly instruct synthesizing information across multiple documents so the failure happened during Generation stage.
@@ -309,13 +268,7 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 **Why I picked it:** I did this change to address the diagnosis for missing Crition 5 where the prompt doesn't instruct to cite the output from multiple documents.
 
-<!-- Connect it to a specific diagnosis above in one sentence. If you can't,
-     you picked a fix because it sounded impressive. -->
-
 ### Run Log — After
-
-<!-- Same format, same five criteria, three runs each.
-     `python run_eval.py --label after` -->
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
@@ -327,27 +280,14 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 **Did it help?**
 
-<!-- Say plainly whether it did, and how you know. If it made things worse,
-     say that — a change that backfired, honestly reported, earns full credit
-     and is more interesting than one that worked. What matters is that you can
-     tell.
-
-     Milestone 4. -->
 Even though I still missed Criterion 5 despite applying a fix for its diagnosis, the passed questions increased from 2/5 (run 1 and 2) and 3/5 (run 3) before the fix to 4/5 (run 1-3). So the fix did work.
 
 ## What's Still Broken
 
-<!-- For each criterion still missed after your fix: what you'd do about it,
-     and why you stopped where you did.
-
-     "I ran out of time" is fine if it's true. Pretending nothing is left is
-     not.
-
-     Milestone 5. -->
+* **Criterion 1:** Pipeline revision will not address missing this criterion since the actual issue lie with faulty evaluation benchmarks, where I fill out expects properly. 
+* **Criterion 4:** Like with Criterion 5, pipeline revision won't address this criterion due to faulty expects.
+* **Criterion 5:** I reviewed question 3 since it's the only one that didn't pass the criterion. More than one document was retrieved but only one source was cited. Another material had potential answers but the actual chunk wasn't retrieved. This highlights a potential chunking/retrieval limitation.
 
 ## What I'd Do Differently
 
-<!-- Knowing what you know now — which of your five criteria would you write
-     differently, and why?
-
-     Milestone 5. -->
+I would rewrite Criterion 4. I revised it from the original in Unit 1 to what it is in Unit 2 since it was subjective and wouldn't apply the same standard across all questions. However, I believe the criterion hits the same underlying evaluate as Criterion 1 of whether or not the retrieved chunks have the answer or not.
