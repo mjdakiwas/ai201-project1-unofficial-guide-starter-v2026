@@ -305,9 +305,9 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 ## The Improvement
 
-**What I changed:**
+**What I changed:** I revised `generate.py` to explicitly read every excerpt, name every document you drew on, name both when two support the same point, and surface disagreement between documents instead of silently picking a side.
 
-**Why I picked it:**
+**Why I picked it:** I did this change to address the diagnosis for missing Crition 5 where the prompt doesn't instruct to cite the output from multiple documents.
 
 <!-- Connect it to a specific diagnosis above in one sentence. If you can't,
      you picked a fix because it sounded impressive. -->
@@ -319,11 +319,11 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Top chunk contains answer | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
+| 5. Answer rely on two or more source materials | 5 of 5 | 4/5 | 4/5 | 4/5 | MISSED |
 
 **Did it help?**
 
@@ -333,6 +333,7 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
      tell.
 
      Milestone 4. -->
+Even though I still missed Criterion 5 despite applying a fix for its diagnosis, the passed questions increased from 2/5 (run 1 and 2) and 3/5 (run 3) before the fix to 4/5 (run 1-3). So the fix did work.
 
 ## What's Still Broken
 

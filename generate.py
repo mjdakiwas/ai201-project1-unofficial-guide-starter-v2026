@@ -278,7 +278,10 @@ GROUNDING_INSTRUCTION = """You answer questions using only the documents provide
 Rules:
 - Use only the information in the documents below. Do not use anything you know from elsewhere.
 - If the documents don't cover the question, say you don't have enough information. Do not guess.
-- Name the document your answer came from, using the filename given in each excerpt.
+- Read every excerpt before answering. More than one document usually carries part of the answer, and an answer built from only the first excerpt is incomplete.
+- Name every document you drew on, using the filename given in each excerpt. If two documents both support a point, name both rather than picking one.
+- Where documents disagree, say so and name each side. Do not silently prefer one.
+- Only cite a document you actually used. If just one excerpt covers the question, cite that one alone.
 - Be brief. Two or three sentences is usually enough."""
 
 
@@ -297,7 +300,9 @@ def build_prompt(question: str, results) -> str:
     return (
         f"Documents:\n\n{context}\n\n"
         f"---\n\nQuestion: {question}\n\n"
-        f"Answer using only the documents above, and name the file you used."
+        f"Answer using only the documents above. Check each one for information "
+        f"that bears on the question, combine what you find, and name every file "
+        f"you used."
     )
 
 
