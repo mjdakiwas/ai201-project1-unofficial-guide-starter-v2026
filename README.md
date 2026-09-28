@@ -274,11 +274,11 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 | # | Criterion | Verdict | How I decided |
 |---|---|---|---|
-| 1 |  |  |  |
-| 2 |  |  |  |
-| 3 |  |  |  |
-| 4 |  |  |  |
-| 5 |  |  |  |
+| 1 | Retrieved chunk contains the answer | MISSED | Based on the pass/fail table in `results\run_2026-09-25_1918_before.md`, only 1 question out of 5 passed for all three runs so I marked this criterion as MISSED.  |
+| 2 | Every answer names a source | MET | The outputs for the five questions' three runs cited sources in `results\run_2026-09-25_1918_before.md` so I marked this criterion as MET. |
+| 3 | Gate stops out-of-corpus questions | MET | All five out of scope questions were refused by the gate in `results\run_2026-09-25_1918_before.md` so I marked this criterion as MET. |
+| 4 | Top chunk contains answer | MISSED | I retrieved the chunks for all five questions and with this revised criterion, I applied the same standard on whether the top chunk had expect/answer for the questions; since only one question passed, I marked this criterion as MISSED. |
+| 5 | Answer rely on two or more source materials | MISSED | Based on the outputs of the five questions' three runs in `results\run_2026-09-25_1918_before.md`, only two questions in run 1 and 2 cited two or more source materials and three questions in run 3, so I marked this criterion as MISSED.  |
 
 ## Diagnoses
 
@@ -316,11 +316,11 @@ Sources retrieved: guide_corry_vale.md, guide_halden_bay.md, guide_kestrelford.m
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1. Retrieved chunk contains the answer | 4 of 5 |  |  |  |  |
-| 2. Every answer names a source | 5 of 5 |  |  |  |  |
-| 3. Gate stops out-of-corpus questions | 4 of 5 |  |  |  |  |
-| 4. | | | | | |
-| 5. | | | | | |
+| 1. Retrieved chunk contains the answer | 4 of 5 | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
+| 2. Every answer names a source | 5 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 3. Gate stops out-of-corpus questions | 4 of 5 | 5/5 | 5/5 | 5/5 | MET |
+| 4. Top chunk contains answer | 4 of 5 | 1/5 | 1/5 | 1/5 | MISSED |
+| 5. Answer rely on two or more source materials | 5 of 5 | 4/5 | 4/5 | 4/5 | MET |
 
 **Did it help?**
 

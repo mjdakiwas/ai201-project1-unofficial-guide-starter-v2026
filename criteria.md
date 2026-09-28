@@ -77,6 +77,10 @@ At least 4 of 5 sampled chunks contains enough complete context to answer the qu
 **Why this target:**
 I am accounting for sections in the source documents that rely on the section header to provide context to the section, which may cause chunks with incomplete context.
 
+> **Revised in unit 2:** For at least 4 of 5 questions, the top retrieved chunk contains the specific required answer.
+> 
+> **Why revised:** The original relied on subjective judgment of "enough complete context" so I wasn't able to apply the same standard on the retrieved chunks across all the questions. I also was unsure on how many chunks I should review to satisfy the criterion. The revised version provides me a clear, testable standard based on top chunk retrieved across the five questions.
+
 ---
 
 ## 5. Your choice
